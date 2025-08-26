@@ -17,12 +17,17 @@ def webhook():
     data = request.json
     print("Data diterima:", data)
 
-    # contoh notifikasi
-    message = f"📢 Webhook diterima:\n```{data}```"
+    # Notifikasi lebih menarik
+    msg = (
+        "✅ **PEMBAYARAN SUKSES** ✅\n"
+        f"📦 Order ID : {data.get('order_id')}\n"
+        f"💰 Jumlah   : Rp{data.get('amount'):,}\n"
+        f"📌 Status   : {data.get('status')}"
+    )
 
     # kirim ke Discord
     try:
-        requests.post(DISCORD_WEBHOOK, json={"content": message})
+        requests.post(DISCORD_WEBHOOK, json={"content": msg})
     except Exception as e:
         print("Gagal kirim ke Discord:", e)
 
