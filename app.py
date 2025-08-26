@@ -1,7 +1,10 @@
 import os
+import requests
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
+
+DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1409845981578788934/vYf5SNoXHri0WRdC7XxAi4b0Aiy2o6Lq5qS7-BZzAdQxj3R4phdXgQOug3IiFeqs2245"
 
 # Endpoint tes
 @app.route("/", methods=["GET"])
@@ -14,13 +17,14 @@ def webhook():
     data = request.json
     print("Data diterima:", data)
 
-    # Contoh jika status pembayaran berhasil
-    if data.get("status") == "SUCCESS":
-        print("Pembayaran sukses dari order:", data.get("order_id"))
+    # contoh notifikasi
+    message = f"📢 Webhook diterima:\n```{data}```"
 
-        # (opsional) kirim notifikasi ke Discord/Telegram
-        # import requests
-        # requests.post(WEBHOOK_URL, json={"content": f"Pembayaran sukses: {data}"})
+    # kirim ke Discord
+    try:
+        requests.post(DISCORD_WEBHOOK, json={"content": message})
+    except Exception as e:
+        print("Gagal kirim ke Discord:", e)
 
     return jsonify({"message": "Webhook diterima"}), 200
 
